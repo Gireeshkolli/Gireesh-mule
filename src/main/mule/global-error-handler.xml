@@ -5,7 +5,7 @@
 	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
 	<error-handler name="global-error-handler" doc:id="a8e12378-e85e-408a-b5c4-1fcccfb5628b" >
 		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="7fd4f233-3b71-4df9-bfa6-8a7ca2e040df" >
-<!-- [STUDIO:"global error handler"]			<set-payload value="global error handler" doc:name="global error handler" doc:id="3ea32456-7392-41e8-8140-69c705224cc2" /> [STUDIO] -->
+<!-- [STUDIO:"global error handler"]			<set-payload value="global error handler as payload" doc:name="global error handler" doc:id="3ea32456-7392-41e8-8140-69c705224cc2" /> [STUDIO] -->
 		</on-error-continue>
 	</error-handler>
 </mule>
