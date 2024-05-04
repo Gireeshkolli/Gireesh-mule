@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<flow name="validatePayloadFlow" doc:id="f4e78128-e859-4794-a1f6-7fc6f91bd680" >
+		<http:listener doc:name="Listener" doc:id="55d708d0-6fe0-4aaf-bbd5-35f26ca3c6cd" config-ref="HTTP_Listener_config" path="/validate"/>
+		<set-payload value="Start" doc:name="Start" doc:id="e2366f80-b7c3-4269-96b2-802bf4b61738" />
+		<validation:is-blank-string doc:name="payload" doc:id="1897c505-2bfa-4d7a-a904-850bfa2c641a" value="#[payload]"/>
+		<set-payload value="END" doc:name="END" doc:id="182903cf-a862-4c5f-aa04-f1d48f98c8de" />
+		<error-handler >
+<!-- [STUDIO:"On Error Propagate"]			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="334cbac5-a2f7-40d8-bd97-c27edc13540c" >
+				<set-payload value="ERROR" doc:name="ERROR" doc:id="bb1694b8-1cd7-4979-8087-53a20ed721bf" />
+			</on-error-propagate> [STUDIO] -->
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="16a97a72-98c4-439d-b241-07b4dff005d4" >
+				<set-payload value="ERROR" doc:name="ERROR" doc:id="fec8c340-7c11-495e-9eeb-aecf3ea96b0f" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>

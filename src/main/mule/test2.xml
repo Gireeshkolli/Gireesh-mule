@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="test2Flow1" doc:id="ded49ece-5129-4f3e-8c15-83f57346b8bd" >
+		<http:listener doc:name="Listener" doc:id="e14e6054-6de9-42bc-8a66-35526ebbefa8" config-ref="HTTP_Listener_config" path="/choice"/>
+		<set-payload value='#[{company:"mulesoft"}]' doc:name="Set Payload" doc:id="12574da9-9f36-498e-b249-0fc53f65456a" />
+		<choice doc:name="Choice" doc:id="b2a2da00-a813-4a90-8654-9fb9495b7dac" >
+			<when expression="#['mulesoft'==payload.company]">
+				<set-payload value='#["TRUE"]' doc:name="TRUE" doc:id="a9750749-d429-4f54-97f1-e6fb1165bd8b" />
+			</when>
+			<otherwise >
+				<set-payload value='#["Default"]' doc:name="DEFAULT" doc:id="51c6765d-a923-4351-acf7-58ba0fa9da89" />
+			</otherwise>
+		</choice>
+	</flow>
+</mule>

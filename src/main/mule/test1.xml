@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="test1Flow" doc:id="17da237a-4f3e-40ca-a2c6-5c1c144eb51e" >
+		<http:listener doc:name="Listener" doc:id="6b736319-dee3-484c-af15-e794c2fc62f6" config-ref="HTTP_Listener_config" path="/test1"/>
+		<set-payload value="Order01" doc:name="Order01" doc:id="30c380fb-7aa0-4666-8df9-7fc3bda79e3c" />
+		<set-variable value="01" doc:name="Set Variable" doc:id="a4acb184-a7f7-4694-b557-8ceced2ebe83" variableName="quantity"/>
+		<http:request method="POST" doc:name="Request" doc:id="910a9614-5a85-4969-9c13-6ff7a720e5c1" url="http://localhost:8081/child"/>
+		<logger level="INFO" doc:name="Logger" doc:id="3d29ed8c-4b0f-42d0-8fc2-7e05da4cf40d" />
+	</flow>
+	<flow name="child" doc:id="45f43e2d-8063-46ad-9077-199727f16595" >
+		<http:listener doc:name="Listener" doc:id="d3fa2b5f-93a5-4f2b-890c-4a5a699f0e25" config-ref="HTTP_Listener_config" path="/child"/>
+		<logger level="INFO" doc:name="Logger" doc:id="8a3b9498-f56f-4c17-9df8-57b837a5ca21" />
+	</flow>
+</mule>

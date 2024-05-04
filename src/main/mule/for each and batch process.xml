@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:batch="http://www.mulesoft.org/schema/mule/batch"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="for_each_and_batch_processFlow" doc:id="d9139930-8bf6-4599-9aef-43f18632d362" >
+		<http:listener doc:name="Listener" doc:id="6a2dcb4b-42ef-4daa-827e-6143e9af4393" config-ref="HTTP_Listener_config" path="/foreach"/>
+		<set-payload value="#[[1,2,3,4]]" doc:name="[1,2,3,4]" doc:id="bc8d6f6e-d9a8-40c8-a083-ba592d1086ca" />
+		<set-variable value="10" doc:name="quantity=10" doc:id="5a013bc2-d141-4263-90a2-b68519c17a9b" variableName="quantity"/>
+		<foreach doc:name="For Each" doc:id="a7821474-67c1-450b-b033-e59475f7e953" >
+			<set-payload value='#["order" ++ payload]' doc:name='"order" ++ payload' doc:id="d17fc9cd-32e0-4aa4-b520-0c98f922b10d" />
+			<set-variable value="#[vars.quantity+1]" doc:name="Set Variable" doc:id="232777a9-09ae-4d98-a1c0-ddca1bb83d5b" variableName="quantity"/>
+		</foreach>
+		<logger level="INFO" doc:name="Logger" doc:id="fbac600a-4af4-4a45-8ec8-9e4b7e2004cd" message="#[[payload, vars.quantity]]"/>
+	</flow>
+	<flow name="for_each_and_batch_processFlow1" doc:id="cd550eef-d0e4-478c-8c01-81a56d55c375" >
+		<scheduler doc:name="Scheduler" doc:id="05260bcc-4b1f-4cb1-a4e1-8f8b7781986b" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="10000"/>
+			</scheduling-strategy>
+		</scheduler>
+		<set-payload value="#[['a','b','c','d','e']]" doc:name="['a','b','c','d','e']" doc:id="7911584f-a780-4956-a89e-1addb74754f1" />
+		<set-variable value="1" doc:name="Set Variable" doc:id="56322a80-f71a-4e32-8c8c-9541d29fb9cf" variableName="test"/>
+		<batch:job jobName="for_each_and_batch_processBatch_Job" doc:id="48c09f6a-9648-4ebd-b782-ffc86d7171fe" >
+			<batch:process-records >
+				<batch:step name="Batch_Step_with_filter" doc:id="2db95883-97e2-4653-9ead-6f18af94f8f5" acceptExpression='#[not (payload contains "b")]'>
+					<ee:transform doc:name="upper(payload)" doc:id="c9dd2172-9b99-4029-8682-8afc3f109649" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+upper(payload)]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+					<batch:aggregator doc:name="Batch Aggregate by 3" doc:id="bb7a31a6-ac3f-4e7f-b445-08fdcddc5a0a" size="3">
+						<logger level="INFO" doc:name="payload" doc:id="21e38e08-7b8a-4169-a6ed-9616801f21c6" message="#[output application/json --- payload]"/>
+					</batch:aggregator>
+				</batch:step>
+			</batch:process-records>
+		</batch:job>
+	</flow>
+</mule>

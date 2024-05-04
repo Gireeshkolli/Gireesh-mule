@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="f47f8ade-c2cc-445e-8acb-e7d7c11edb06" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="main" doc:id="51db30d3-844c-48eb-8d30-a85cda4f2424" >
+		<http:listener doc:name="Listener" doc:id="995c696d-b06b-4a92-bfcf-5bf8c477dee7" config-ref="HTTP_Listener_config" path="/practice"/>
+		<flow-ref doc:name="Flow Reference" doc:id="2f127047-6979-480d-927c-1e45c4c6f663" name="privateFlow"/>
+		<set-payload value="successmainflow" doc:name="MAIN" doc:id="7d1fbf29-b5b9-4617-995c-380d332048c4" />
+		<ee:transform doc:name="Transform Message" doc:id="3f6f65da-5d6b-4ee9-a2ad-95a9fd053c66" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+typeOf(payload)]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="baf6090b-9a13-48d9-b406-d58577d0820f" type="ANY">
+				<set-payload value="Error -main flow" doc:name="Error -main flow" doc:id="8e2f4182-a4af-4815-a01e-8f79702ce157" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="privateFlow" doc:id="861d6605-2a03-4446-ae4a-4aacaf201d11" >
+		<validation:is-number numberType="INTEGER" doc:name="payload" doc:id="2ea32954-6c16-4525-b62e-beee98286e67" value="#[payload]" message="validate payload is an integer"/>
+		<error-handler>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="35f59030-9e00-4c24-a711-697398d8aa91" >
+				<set-payload value="Error -main flow" doc:name="Error -main flow" doc:id="80beca46-134d-484b-90d8-b7ffca3da9a1" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="testFlow1" doc:id="1f5be206-8a75-4b6a-9253-8517a170f33a" >
+		<http:listener doc:name="Listener" doc:id="ece34e97-912d-47fe-a9bf-7e7adbae7ccf" config-ref="HTTP_Listener_config" path="/check"/>
+		<set-payload value="Before" doc:name="Befor" doc:id="c399598f-8a2d-4d25-8b92-ca054189ee73" />
+		<validation:is-null doc:name="Is null" doc:id="44ef42b9-7d63-405b-b6e3-76efa18cf100" value="#[payload]" message="Validation Error"/>
+		<set-payload value="AFter" doc:name="after" doc:id="a00eef4e-3709-45ca-8054-065b6e66067d" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="5a5c3273-2b5d-488e-9461-1eb26c842f12" >
+<!-- [STUDIO:"ERROR2"]				<set-payload value="ERROR2" doc:name="ERROR2" doc:id="17317a3f-df74-4e9e-8aa6-0ced2618a960" /> [STUDIO] -->
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>
